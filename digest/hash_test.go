@@ -39,6 +39,14 @@ func TestSum(t *testing.T) {
 	assert.Equal(t, digest, hashed)
 }
 
+func TestCompare(t *testing.T) {
+	digest1 := FromHex("9f86d081884c7d659a2feaa0c55ad005a3bf4f1b2b0b822cd15d6c15b0f00a08")
+	digest2 := FromHex("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
+	assert.Equal(t, -1, Compare(digest1, digest2))
+	digest1 = FromHex("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
+	assert.Equal(t, 0, Compare(digest1, digest2))
+}
+
 func TestIsEmpty(t *testing.T) {
 	assert.Equal(t, false, IsEmpty(FromHex("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")))
 	assert.Equal(t, true, IsEmpty(FromHex("0000000000000000000000000000000000000000000000000000000000000000")))
