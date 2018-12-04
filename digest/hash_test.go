@@ -47,6 +47,12 @@ func TestCompare(t *testing.T) {
 	assert.Equal(t, 0, Compare(digest1, digest2))
 }
 
+func TestSumBytes(t *testing.T) {
+	hashed := SumBytes(sha256.New(), []byte("test"))
+	digest := FromHex("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
+	assert.Equal(t, digest[:], hashed)
+}
+
 func TestIsEmpty(t *testing.T) {
 	assert.Equal(t, false, IsEmpty(FromHex("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")))
 	assert.Equal(t, true, IsEmpty(FromHex("0000000000000000000000000000000000000000000000000000000000000000")))
