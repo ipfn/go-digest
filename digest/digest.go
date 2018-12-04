@@ -17,8 +17,10 @@ package digest
 import (
 	"bytes"
 	"encoding/hex"
+	"fmt"
 	"hash"
 	"io"
+	"strings"
 )
 
 // Size - Default digest size.
@@ -55,6 +57,7 @@ func SumBytes(h hash.Hash, data ...[]byte) (digest []byte) {
 
 // FromHex - Creates digest from hex string.
 func FromHex(src string) (digest Digest) {
+	src = strings.TrimPrefix(src, "0x")
 	hex.Decode(digest[:], []byte(src))
 	return
 }
@@ -83,4 +86,9 @@ func Compare(a, b Digest) int {
 // Bytes - Returns digest bytes.
 func (digest Digest) Bytes() []byte {
 	return digest[:]
+}
+
+// String - Returns digest hex.
+func (digest Digest) String() string {
+	return fmt.Sprintf("0x%x", digest[:])
 }

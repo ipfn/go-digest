@@ -21,7 +21,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/minio/sha256-simd"
+	sha256 "github.com/minio/sha256-simd"
 	multihash "github.com/multiformats/go-multihash"
 	"golang.org/x/crypto/sha3"
 )
@@ -32,6 +32,8 @@ func TestFromHex(t *testing.T) {
 	assert.Equal(t, digest, expect)
 	// we need == operator forever
 	assert.Equal(t, digest == expect, true)
+	assert.Equal(t, digest.String(), "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421")
+	assert.Equal(t, digest, FromHex(digest.String()))
 }
 
 func TestSum(t *testing.T) {
