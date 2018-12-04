@@ -15,6 +15,7 @@
 package digest
 
 import (
+	stdsha256 "crypto/sha256"
 	"encoding/hex"
 	"testing"
 
@@ -39,6 +40,12 @@ func TestSum(t *testing.T) {
 	assert.Equal(t, digest, hashed)
 }
 
+func TestSumStd(t *testing.T) {
+	hashed := Sum(stdsha256.New(), []byte("test"))
+	digest := FromHex("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
+	assert.Equal(t, digest, hashed)
+}
+
 func TestCompare(t *testing.T) {
 	digest1 := FromHex("9f86d081884c7d659a2feaa0c55ad005a3bf4f1b2b0b822cd15d6c15b0f00a08")
 	digest2 := FromHex("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
@@ -50,7 +57,7 @@ func TestCompare(t *testing.T) {
 func TestSumBytes(t *testing.T) {
 	hashed := SumBytes(sha256.New(), []byte("test"))
 	digest := FromHex("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
-	assert.Equal(t, digest[:], hashed)
+	assert.Equal(t, digest.Bytes(), hashed)
 }
 
 func TestIsEmpty(t *testing.T) {
@@ -98,7 +105,7 @@ func TestHashFromDigest(t *testing.T) {
 
 	hash := HashFromDigest(algo, hashed)
 	assert.Equal(t, hash.Size(), len(hashed))
-	assert.Equal(t, hash.Digest(), hashed[:])
+	assert.Equal(t, hash.Digest(), hashed.Bytes())
 	assert.Equal(t, hash.Bytes(), []byte(mh))
 
 	dec, err := DecodeHash([]byte(mh))
@@ -115,11 +122,14 @@ func TestMultihasher(t *testing.T) {
 	hasher := NewHasher(Sha3_256, sha3.New256())
 	hasher.Reset()
 	hasher.Write(buf)
+	assert.Equal(t, Sha3_256, hasher.Algorithm())
 	assert.Equal(t, hasher.Sum(nil), []byte(mh))
 }
 
 func TestBlakez(t *testing.T) {
-	assert.Equal(t, "blake2b-256", Blake2b256.String())
+	assert.Equal(t, "blake2s", FamilyBlake2s.String())
+	assert.Equal(t, "blake2b", FamilyBlake2b.String())
+	assert.Equal(t, "blake2s-256", Blake2sMax.String())
 	assert.Equal(t, "blake2s-256", Blake2sMax.String())
 }
 
